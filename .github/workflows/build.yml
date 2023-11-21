@@ -54,7 +54,7 @@ jobs:
         source hadk.env
         mkdir -p $ANDROID_ROOT
         cd $ANDROID_ROOT
-        repo init -u https://github.com/mer-hybris/android.git -b hybris-11.0 --depth=1 --no-repo-verify
+        repo init -u https://github.com/mer-hybris/android.git -b hybris-18.1 --depth=1 --no-repo-verify
         mkdir $ANDROID_ROOT/.repo/local_manifests
         curl -L -o $ANDROID_ROOT/.repo/local_manifests/ginkgo.xml https://github.com/sailfish-ginkgo/device-manifest/raw/main/ginkgo.xml
         repo sync --force-sync -c --no-clone-bundle --no-tags
