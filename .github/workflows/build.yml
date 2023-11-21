@@ -52,6 +52,7 @@ jobs:
     - name: Downloading source code
       run: |
         source hadk.env
+        rm -Rf $ANDROID_ROOT
         mkdir -p $ANDROID_ROOT
         cd $ANDROID_ROOT
         repo init -u https://github.com/mer-hybris/android.git -b hybris-18.1 --depth=1 --no-repo-verify
