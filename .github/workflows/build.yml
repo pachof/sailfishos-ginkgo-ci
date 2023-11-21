@@ -16,13 +16,13 @@ on:
 jobs:
 
   build:
-    runs-on: ubuntu-16.04
+    runs-on: ubuntu-20.04
 
     env:
-      DEVICE: sagit
+      DEVICE: ginkgo
       VENDOR: xiaomi
       ANDROID_ROOT: /home/runner/work/hadk_16.0/
-      SAILFISH_SKD_VERSION: 3.3.0.16
+      SAILFISH_SKD_VERSION: 4.5.0.24
 
     steps:
     - name: Checkout
@@ -38,7 +38,7 @@ jobs:
         lib32readline-dev lib32z1-dev libesd0-dev liblz4-tool \
         libncurses5-dev libsdl1.2-dev libssl-dev libwxgtk3.0-dev \
         libxml2 libxml2-utils lzop pngcrush rsync schedtool \
-        squashfs-tools xsltproc yasm zip zlib1g-dev git
+        squashfs-tools xsltproc yasm zip zlib1g-dev git curl
 
 
     - name: Download repo bin file
@@ -46,34 +46,22 @@ jobs:
         mkdir -p ~/bin
         wget 'https://storage.googleapis.com/git-repo-downloads/repo' -P ~/bin
         chmod +x ~/bin/repo
-        git config --global user.name "Verevka"
-        git config --global user.email "verevka86@gmail.com"
+        git config --global user.name "pachof"
+        git config --global user.email "pachomasto2009@gmail.com"
 
     - name: Downloading source code
       run: |
         source hadk.env
         mkdir -p $ANDROID_ROOT
         cd $ANDROID_ROOT
-        repo init -u git://github.com/SailfishOS-sagit/android -b hybris-16.0 --depth=1 --no-repo-verify
-        repo sync --fetch-submodules --force-sync -c --no-clone-bundle --no-tags
+        repo init -u git://github.com/mer-hybris/android.git -b hybris-18.1 --depth=1 --no-repo-verify
+        mkdir $ANDROID_ROOT/.repo/local_manifests
+        curl -L -o $ANDROID_ROOT/.repo/local_manifests/ginkgo.xml https://github.com/sailfish-ginkgo/device-manifest/raw/main/ginkgo.xml
+        repo sync --force-sync -c --no-clone-bundle --no-tags
     
     - name: Clone device spec source
       run: |
         source hadk.env
-        git clone https://github.com/SailfishOS-sagit/android_device_xiaomi_sagit.git $ANDROID_ROOT/device/xiaomi/sagit -b lineage-16.0 --depth=1
-        git clone https://github.com/SailfishOS-sagit/android_device_xiaomi_msm8998-common.git $ANDROID_ROOT/device/xiaomi/msm8998-common -b hybris-16.0 --depth=1
-        git clone https://github.com/SailfishOS-sagit/android_kernel_xiaomi_msm8998.git $ANDROID_ROOT/kernel/xiaomi/msm8998 -b ubports --depth=1
-        rm -rf $ANDROID_ROOT/hybris/hybris-boot
-        git clone https://github.com/SailfishOS-sagit/hybris-boot.git $ANDROID_ROOT/hybris/hybris-boot -b master
-        git clone https://github.com/SailfishOS-sagit/android_vendor_xiaomi.git $ANDROID_ROOT/vendor/xiaomi -b lineage-16.0
-        rm -rf $ANDROID_ROOT/vendor/lineage
-        git clone https://github.com/SailfishOS-sagit/android_vendor_lineage.git $ANDROID_ROOT/vendor/lineage -b lineage-16.0
-        git clone https://github.com/SailfishOS-sagit/hybris-installer.git $ANDROID_ROOT/hybris/hybris-installer -b master
-        git clone https://github.com/piggz/sailfish-fpd-community.git $ANDROID_ROOT/hybris/mw/sailfish-fpd-community -b master
-        git clone https://github.com/SailfishOS-sagit/erfanoabdi/fake_crypt.git $ANDROID_ROOT/external/fake_crypt -b master
-        git clone --recurse-submodules https://github.com/SailfishOS-sagit/droid-hal-sagit.git $ANDROID_ROOT/rpm -b 3.3.0.16
-        git clone --recurse-submodules https://github.com/SailfishOS-sagit/droid-config-sagit.git $ANDROID_ROOT/hybris/droid-configs -b 3.3.0.16
-        git clone --recurse-submodules https://github.com/SailfishOS-sagit/droid-hal-version-sagit.git $ANDROID_ROOT/hybris/droid-hal-version-sagit -b 3.3.0.16
         rm -rf $ANDROID_ROOT/external/droidmedia
         git clone https://github.com/sailfishos/droidmedia.git $ANDROID_ROOT/external/droidmedia
 
